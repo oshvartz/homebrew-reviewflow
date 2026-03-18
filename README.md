@@ -4,7 +4,7 @@ A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a na
 
 ## Screenshots
 
-<!-- Add screenshots here -->
+![reviewFlow](screenshots/reviewflow.png)
 
 ## Features
 
