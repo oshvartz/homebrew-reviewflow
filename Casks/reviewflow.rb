@@ -1,6 +1,6 @@
 cask "reviewflow" do
-  version "0.0.3"
-  sha256 "14b5c4cec22c9cf68cea5352c0b912f8a1b18e5802107c3dc9637946fbb92516"
+  version "0.0.4"
+  sha256 "a9d8f65490e81d129167e30f730670ab934f4a810eb9272d7e203920fd8062ef"
 
   url "https://github.com/oshvartz/homebrew-reviewflow/releases/download/v#{version}/reviewFlow_#{version}_aarch64.dmg"
 
