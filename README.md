@@ -16,22 +16,15 @@ A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a na
 - **Reviewer Filtering** — Filter comments and history by contributor
 - **Enterprise Support** — Works with GitHub.com and GitHub Enterprise
 
-## Install
+## Install + First Launch
+The app is not notarized (don't have apple develop cert) so additional command needs to run only once
 
 ```bash
 brew tap oshvartz/reviewflow
 brew install --cask reviewflow
-```
-
-## First Launch (Gatekeeper)
-
-The app is not notarized. After installing, run:
-
-```bash
 xattr -cr /Applications/reviewFlow.app
 ```
-
-Then open the app normally.
+open the application reviewFlow.app
 
 ## First-Time Setup
 
