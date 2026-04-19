@@ -13,6 +13,8 @@ A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a na
 - **Multi-Host Support** — Store PAT tokens for multiple GitHub instances (github.com + Enterprise) in one vault
 - **Persistent Login** — Vault auto-unlocks on app restart after entering your master password once
 - **Diff Viewer** — Side-by-side diffs with syntax highlighting and inline commenting
+- **Mermaid Diagrams** — Mermaid fenced code blocks in PR descriptions and comments render as interactive diagrams with zoom and pan
+- **Extensionless File Support** — Diff viewer previews extensionless text files (e.g. `Makefile`, `Dockerfile`)
 - **Reviewer Filtering** — Filter comments and history by contributor
 - **Enterprise Support** — Works with GitHub.com and GitHub Enterprise
 - **Deep links** — Open a PR in a new review window from Terminal, Automator, or other apps via the `reviewflow://` URL scheme (see [Deep links](#deep-links))
