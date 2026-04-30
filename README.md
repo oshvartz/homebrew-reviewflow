@@ -1,8 +1,5 @@
 # reviewFlow
 
-[![GitHub downloads](https://img.shields.io/github/downloads/oshvartz/homebrew-reviewflow/total)](https://github.com/oshvartz/homebrew-reviewflow/releases)
-[![GitHub downloads (latest)](https://img.shields.io/github/downloads/oshvartz/homebrew-reviewflow/latest/total)](https://github.com/oshvartz/homebrew-reviewflow/releases)
-
 A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a native desktop app on macOS with an encrypted vault that stores your tokens behind a master password.
 
 ## Screenshots
