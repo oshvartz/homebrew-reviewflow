@@ -16,6 +16,7 @@ A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a na
 - **Mermaid Diagrams** — Mermaid fenced code blocks in PR descriptions and comments render as interactive diagrams with zoom and pan
 - **Extensionless File Support** — Diff viewer previews extensionless text files (e.g. `Makefile`, `Dockerfile`)
 - **Reviewer Filtering** — Filter comments and history by contributor
+- **Assistant tab (experimental)** — A new tab for AI-assisted review workflows (feature is still in active development)
 - **Enterprise Support** — Works with GitHub.com and GitHub Enterprise
 - **Deep links** — Open a PR in a new review window from Terminal, Automator, or other apps via the `reviewflow://` URL scheme (see [Deep links](#deep-links))
 
@@ -79,19 +80,30 @@ Use a **Quick Action** so you can select a PR link in Safari, Slack, Mail, etc.,
 
 1. Open **Automator** → **New Document** → **Quick Action** (on older macOS: **Service**).
 2. Set **Workflow receives current** → **text** in **any application**.
-3. Add **Run Shell Script** (Library → Utilities). Set shell to `/bin/bash` (or `/bin/zsh`) and **Pass input** → **as arguments**.
+3. Add **Run Shell Script** (Library → Utilities). Set shell to `/bin/bash` (or `/bin/zsh`) and **Pass input** → **to stdin**.
 4. Paste:
 
 ```bash
-PR_URL="$1"
+# 1. Clean the input
+PR_URL="$(cat | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
 if [[ -z "$PR_URL" ]]; then
   osascript -e 'display alert "No text selected" message "Select a GitHub PR URL first."'
   exit 1
 fi
+
+# 2. Prepend https:// if it is missing
+if [[ ! "$PR_URL" =~ ^https?:// ]]; then
+  PR_URL="https://$PR_URL"
+fi
+
+# 3. Validate the URL structure
 if ! [[ "$PR_URL" =~ https?://[^/]+/.+/[^/]+/pull/[0-9]+ ]]; then
-  osascript -e 'display alert "Not a PR URL" message "Selection must look like https://host/org/repo/pull/123"'
+  osascript -e 'display alert "Not a PR URL" message "Selection must look like a valid GitHub PR URL (e.g., github.com/org/repo/pull/123)"'
   exit 1
 fi
+
+# 4. Encode and Open
 ENC=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$PR_URL")
 open "reviewflow://open?pr=${ENC}"
 ```
@@ -99,7 +111,7 @@ open "reviewflow://open?pr=${ENC}"
 5. Save (for example **Open in reviewFlow**).
 6. Select a PR URL in any app → **right-click** → **Services** or **Quick Actions** → choose your saved action.
 
-If you see **"No text selected"**, reopen the workflow and confirm **Workflow receives current** is **text** and **Pass input** is **as arguments** (not stdin).
+If you see **"No text selected"**, reopen the workflow and confirm **Workflow receives current** is **text** and **Pass input** is **to stdin** (not as arguments).
 
 **Notes:** Install the app and run it at least once so macOS registers the URL scheme. If the app shows the vault lock screen first, unlock the vault; the PR opens after the main UI is ready.
 
