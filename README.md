@@ -1,5 +1,7 @@
 # reviewFlow
 
+[![Downloads](https://img.shields.io/github/downloads/oshvartz/homebrew-reviewflow/total)](https://github.com/oshvartz/homebrew-reviewflow/releases)
+
 A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a native desktop app on macOS with an encrypted vault that stores your tokens behind a master password.
 
 ## Screenshots
@@ -80,38 +82,50 @@ Use a **Quick Action** so you can select a PR link in Safari, Slack, Mail, etc.,
 
 1. Open **Automator** → **New Document** → **Quick Action** (on older macOS: **Service**).
 2. Set **Workflow receives current** → **text** in **any application**.
-3. Add **Run Shell Script** (Library → Utilities). Set shell to `/bin/bash` (or `/bin/zsh`) and **Pass input** → **to stdin**.
+3. Add **Run Shell Script** (Library → Utilities). Set shell to `/bin/bash` (or `/bin/zsh`) and **Pass input** → **as arguments**.
 4. Paste:
 
 ```bash
-# 1. Clean the input
-PR_URL="$(cat | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+#!/bin/bash
 
-if [[ -z "$PR_URL" ]]; then
-  osascript -e 'display alert "No text selected" message "Select a GitHub PR URL first."'
+extract_pr_url() {
+  echo "$1" | grep -oE 'https?://[^[:space:]"'"'"'<>]+/pull/[0-9]+' | head -1
+}
+
+# 1. Try «class URLD» clipboard type (set by browser/Slack "Copy Link")
+CLIP_URL=$(osascript -e 'try
+  set u to (the clipboard as «class URLD»)
+  return u as text
+on error
+  return ""
+end try' 2>/dev/null | tr -d '\r\n')
+URL=$(extract_pr_url "$CLIP_URL")
+
+# 2. Try plain clipboard
+if [[ -z "$URL" ]]; then
+  URL=$(extract_pr_url "$(pbpaste | tr -d '\r\n')")
+fi
+
+# 3. Try argument (works when selected text IS the URL)
+if [[ -z "$URL" ]]; then
+  URL=$(extract_pr_url "$1")
+fi
+
+if [[ -z "$URL" ]]; then
+  osascript -e 'display alert "No PR URL found" message "Right-click the PR link, choose Copy Link, then trigger this action."'
   exit 1
 fi
 
-# 2. Prepend https:// if it is missing
-if [[ ! "$PR_URL" =~ ^https?:// ]]; then
-  PR_URL="https://$PR_URL"
-fi
-
-# 3. Validate the URL structure
-if ! [[ "$PR_URL" =~ https?://[^/]+/.+/[^/]+/pull/[0-9]+ ]]; then
-  osascript -e 'display alert "Not a PR URL" message "Selection must look like a valid GitHub PR URL (e.g., github.com/org/repo/pull/123)"'
-  exit 1
-fi
-
-# 4. Encode and Open
-ENC=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$PR_URL")
+ENC=$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$URL")
 open "reviewflow://open?pr=${ENC}"
 ```
 
 5. Save (for example **Open in reviewFlow**).
-6. Select a PR URL in any app → **right-click** → **Services** or **Quick Actions** → choose your saved action.
+6. Trigger the action:
+   - **Selected text is the URL** (e.g. you selected `https://github.com/…/pull/123`): trigger directly.
+   - **Labeled link in browser or Slack** (text says "Introduce Central Package Management"): right-click the link → **Copy Link**, then trigger the action.
 
-If you see **"No text selected"**, reopen the workflow and confirm **Workflow receives current** is **text** and **Pass input** is **to stdin** (not as arguments).
+The script checks the clipboard URL type set by browsers and Slack when you use Copy Link, then falls back to plain clipboard text, then to the selected text.
 
 **Notes:** Install the app and run it at least once so macOS registers the URL scheme. If the app shows the vault lock screen first, unlock the vault; the PR opens after the main UI is ready.
 
