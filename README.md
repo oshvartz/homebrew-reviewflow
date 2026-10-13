@@ -4,6 +4,8 @@
 
 A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a native desktop app on macOS with an encrypted vault that stores your tokens behind a master password.
 
+![reviewFlow teaser](screenshots/reviewflow-teaser.gif)
+
 ## Screenshots
 
 ![reviewFlow](screenshots/reviewflow.png)
