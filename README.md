@@ -2,26 +2,26 @@
 
 [![Downloads](https://img.shields.io/github/downloads/oshvartz/homebrew-reviewflow/total)](https://github.com/oshvartz/homebrew-reviewflow/releases)
 
-A client-side GitHub PR review tool with an IDE-like 4-pane layout. Runs as a native desktop app on macOS with an encrypted vault that stores your tokens behind a master password.
+A client-side GitHub PR review tool with an IDE-like layout. Runs as a native desktop app on macOS with an encrypted vault that stores your tokens behind a master password.
 
 ![reviewFlow teaser](screenshots/reviewflow-teaser.gif)
 
-## Screenshots
-
-![reviewFlow](screenshots/reviewflow.png)
-
 ## Features
 
-- **4-Pane IDE Layout** — Resizable file explorer, diff viewer, conversation, and reviewers panels
+- **IDE-Style Layout** — Activity rail (Files, Conversation, History, Assistant, Inbox), resizable sidebar, diff viewer, and PR details panel
+- **PR Inbox** — Incoming, outgoing, and involved PRs in one place, with a repo filter (`⌘5` or `I`)
+- **Diff Viewer** — Unified or side-by-side diffs with syntax highlighting, inline commenting, change-by-change navigation, in-file search (`⌘F` pre-fills the selected text), and copy-file-to-clipboard
+- **Markdown Preview** — Changed Markdown files render as a preview you can comment on directly, block by block
+- **Mermaid Diagrams** — Mermaid fenced code blocks in Markdown files, PR descriptions, and comments render as interactive diagrams with zoom and pan
+- **Viewed-File Tracking** — Mark files as reviewed and track progress across the PR
+- **Comment Threads** — Reply, resolve, and jump from any comment straight to its line in the code; outdated comments are grouped separately
+- **Reviewer Filtering** — Filter comments and history by contributor
+- **Extensionless File Support** — Diff viewer previews extensionless text files (e.g. `Makefile`, `Dockerfile`)
+- **Assistant tab (experimental)** — AI-assisted review via AWS Bedrock or an OpenAI-compatible endpoint (feature is still in active development)
+- **Keyboard Shortcuts** — `⌘K` open PR, `⌘1`–`⌘5` switch views, `⌘⏎` submit review (see **? Shortcuts** in the status bar)
 - **Encrypted Vault** — AES-256-GCM encryption with Argon2 key derivation; unlocked with a master password
 - **Multi-Host Support** — Store PAT tokens for multiple GitHub instances (github.com + Enterprise) in one vault
 - **Persistent Login** — Vault auto-unlocks on app restart after entering your master password once
-- **Diff Viewer** — Side-by-side diffs with syntax highlighting and inline commenting
-- **Mermaid Diagrams** — Mermaid fenced code blocks in PR descriptions and comments render as interactive diagrams with zoom and pan
-- **Extensionless File Support** — Diff viewer previews extensionless text files (e.g. `Makefile`, `Dockerfile`)
-- **Reviewer Filtering** — Filter comments and history by contributor
-- **Assistant tab (experimental)** — A new tab for AI-assisted review workflows (feature is still in active development)
-- **Enterprise Support** — Works with GitHub.com and GitHub Enterprise
 - **Deep links** — Open a PR in a new review window from Terminal, Automator, or other apps via the `reviewflow://` URL scheme (see [Deep links](#deep-links))
 
 ## Install + First Launch
@@ -44,7 +44,7 @@ On first launch you are prompted to create a master password. This password encr
 
 ### 2. Add a GitHub Host and Token
 
-1. Click **"Authorize"** in the top bar.
+1. Click **"Sign in"** in the top bar.
 2. Enter your GitHub host:
    - `github.com` for public GitHub
    - `your.enterprise.host` for GitHub Enterprise
@@ -53,7 +53,7 @@ On first launch you are prompted to create a master password. This password encr
 
 ### 3. Load a Pull Request
 
-Paste a full PR URL and press **Enter** or click **Load**:
+Pick a PR from the **Inbox**, or paste a full PR URL into the top bar (`⌘K`) and press **Enter**:
 
 ```
 https://github.com/owner/repo/pull/123
